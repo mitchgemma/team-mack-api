@@ -8,7 +8,7 @@ const favoriteSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['event', 'performer', 'venue'],
+      enum: ['events', 'performers', 'venues'],
       required: true,
     },
     seatGeekId: {
