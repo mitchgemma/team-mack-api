@@ -77,7 +77,7 @@ router.get('/search/:type/:name', (req, res, next) => {
 
 // SHOW
 // GET /favorites/<seatGeekId>
-router.get('/favorites/:id', (req, res, next) => {
+router.get('/favorites/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
   Favorite.findById(req.params.id)
     .then(handle404)
@@ -87,5 +87,21 @@ router.get('/favorites/:id', (req, res, next) => {
     .catch(next)
 })
 
+// CREATE
+// POST /favorites
+router.post('/favorites', requireToken, (req, res, next) => {
+	// set owner of new example to be current user
+	req.body.favorite.owner = req.user.id
+
+	Favorite.create(req.body.favorite)
+		// respond to succesful `create` with status 201 and JSON of new "example"
+		.then((favorite) => {
+			res.status(201).json({ favorite: favorite.toObject() })
+		})
+		// if an error occurs, pass it off to our error handler
+		// the error handler needs the error message and the `res` object so that it
+		// can send an error message back to the client
+		.catch(next)
+})
 
 module.exports = router
