@@ -78,13 +78,28 @@ router.get('/search/:type/:name', (req, res, next) => {
 // SHOW
 // GET /favorites/<seatGeekId>
 router.get('/favorites/:id', requireToken, (req, res, next) => {
-  // req.params.id will be set based on the `:id` in the route
+  
   Favorite.findById(req.params.id)
-    .then(handle404)
-    // if `findById` is succesful, respond with 200 and "example" JSON
-    .then((favorite) => res.status(200).json({ favorite: favorite.toObject() }))
-    // if an error occurs, pass it to the handler
-    .catch(next)
+  .then(handle404)
+
+  .then((favorite) => {
+    // make an API call using our saved type and seatGeekId from the database
+    // console.log('this is seatgeek', favorite.seatGeekId )
+    const type = favorite.type
+    const seatGeekId = favorite.seatGeekId
+    const apiUrl = 'https://api.seatgeek.com/2/'
+    const clientCode = 'MjYzNDYyODl8MTY0ODY4NTU3OS45NjEwNTYy'
+    const secretCode =
+    '2b6bbdda96ccdb82a057700129eeefa19c774f6ff5e39ab28e15eb61db0013e4'
+    
+  axios
+  .get(
+    `${apiUrl}${type}?client_id=${clientCode}&client_SECRET=${secretCode}&id=${seatGeekId}`
+    )
+  .then((response) => res.status(200).json(response.data))
+  .catch(next)
+
+  })
 })
 
 // CREATE
