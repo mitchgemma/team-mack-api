@@ -37,43 +37,6 @@ router.get('/favorites', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-// SEARCH
-// GET
-router.get('/search/:type/:name', (req, res, next) => {
-  const type = req.params.type
-  const searchItem = req.params.name
-  const apiUrl = 'https://api.seatgeek.com/2/'
-  const clientCode = 'MjYzNDYyODl8MTY0ODY4NTU3OS45NjEwNTYy'
-  const secretCode =
-    '2b6bbdda96ccdb82a057700129eeefa19c774f6ff5e39ab28e15eb61db0013e4'
-
-  if (type === 'events') {
-    axios
-    .get(
-      `${apiUrl}${type}?client_id=${clientCode}&client_SECRET=${secretCode}&q=${searchItem}&taxonomies.name=concert`
-    )
-    .then((response) => res.status(200).json(response.data))
-    .catch(next)
-  } else if (type === 'performers') {
-    axios
-    .get(
-      `${apiUrl}${type}?client_id=${clientCode}&client_SECRET=${secretCode}&q=${searchItem}&taxonomies.name=concerts`
-    )
-    .then((response) => res.status(200).json(response.data))
-    .catch(next)
-  } else if (type === 'venues'){
-    axios
-    .get(
-      `${apiUrl}${type}?client_id=${clientCode}&client_SECRET=${secretCode}&q=${searchItem}`
-    )
-    .then((response) => res.status(200).json(response.data))
-    .catch(next)
-  }
-    // .then(response => console.log(JSON.stringify(response.data: )))
-    // .then((response) => console.log('this is the type', {taxonomies: taxonomies}))
-    // if an error occurs, pass it to the handler
-})
-
 // SHOW
 // GET /favorites/<seatGeekId>
 router.get('/favorites/:id', requireToken, (req, res, next) => {
