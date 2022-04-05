@@ -9,11 +9,11 @@ const profileSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    lastName: {
+    city: {
       type: String,
       required: true,
     },
-    city: {
+    state: {
       type: String,
       required: true,
     },
@@ -21,9 +21,9 @@ const profileSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    state: {
-      type: String,
-      required: true,
+    genres: [String],
+    openToNewMusic: {
+      type: Boolean,
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
