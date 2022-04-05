@@ -50,6 +50,8 @@ router.patch(
     User.findById(userId)
       .then(handle404)
       .then((user) => {
+        // keeping all of these to troubleshoot with Timm
+        // also route seems to be working without the profileId param
         console.log('user.profile.id', user.profile.id)
         console.log('the user.profile ya know', user.profile)
         console.log('req.body.profile', req.body.profile)
