@@ -8,7 +8,7 @@ const favoriteSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['event', 'performer', 'venue'],
+      enum: ['events', 'performers', 'venues'],
       required: true,
     },
     seatGeekId: {
@@ -18,9 +18,9 @@ const favoriteSchema = new mongoose.Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
   },
+  
   {
     timestamps: true,
   }
