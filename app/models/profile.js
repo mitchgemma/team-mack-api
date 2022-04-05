@@ -18,7 +18,7 @@ const profileSchema = new mongoose.Schema(
       required: true,
     },
     zipcode: {
-      type: Number,
+      type: String,
       required: true,
     },
     genres: [String],
