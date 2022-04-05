@@ -8,6 +8,7 @@ const userRoutes = require('./app/routes/user_routes')
 const favoriteRoutes = require('./app/routes/favorite_routes')
 const commentRoutes = require('./app/routes/comment_routes')
 const searchRoutes = require('./app/routes/search_routes')
+const profileRoutes = require('./app/routes/profile_routes')
 
 // require middleware
 const errorHandler = require('./lib/error_handler')
@@ -71,6 +72,7 @@ app.use(userRoutes)
 app.use(favoriteRoutes)
 app.use(commentRoutes)
 app.use(searchRoutes)
+app.use(profileRoutes)
 
 // register error handling middleware
 // note that this comes after the route middlewares, because it needs to be
