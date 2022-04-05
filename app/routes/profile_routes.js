@@ -15,22 +15,21 @@ const router = express.Router()
 // POST -> create a profile
 // path might need to be changed
 router.post('/:userId', removeBlanks, (req, res, next) => {
-  // get our toy from req.body
   const userId = req.params.userId
   const profile = req.body.profile
   console.log('the user', userId)
   console.log('the profile', profile)
-  // find the pet
+  // find the user
   User.findById(userId)
     // handle what happens if no user is found
     .then(handle404)
     .then((user) => {
-      console.log('this is the user', user)
       console.log('this is the req.body', req.body)
-      // push the toy to the toys array
-      //   pet.toys.push(toy)
-      user.profile.push(profile)
-      // save the pet
+      console.log('this is the user.profile', user.profile)
+      //   user.profile.push(profile)
+      user.profile = req.body.profile
+      // save the user
+      console.log('this is the user', user)
       return user.save()
     })
     // then we send the pet as json
