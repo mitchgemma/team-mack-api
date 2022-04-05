@@ -1,7 +1,6 @@
 const express = require('express')
 const passport = require('passport')
 const axios = require('axios')
-
 // pull in Mongoose model for favorites
 const Favorite = require('../models/favorite')
 
