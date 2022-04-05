@@ -27,54 +27,56 @@ const router = express.Router()
 
 // CREATE
 // POST /comment
-router.post('/comment', requireToken, (req, res, next) => {
-	// set owner of new example to be current user
-	req.body.comment.owner = req.user.id
+router.post('/comments', requireToken, (req, res, next) => {
+  // set owner of new example to be current user
+  req.body.comment.owner = req.user.id
 
-	Comment.create(req.body.comment)
-		// respond to succesful `create` with status 201 and JSON of new "example"
-		.then((comment) => {
-			res.status(201).json({ comment: comment.toObject() })
-		})
-		// if an error occurs, pass it off to our error handler
-		// the error handler needs the error message and the `res` object so that it
-		// can send an error message back to the client
-		.catch(next)
+  Comment.create(req.body.comment)
+    // respond to succesful `create` with status 201 and JSON of new "example"
+    .then((comment) => {
+      //   console.log('this is created comment ', req.body.comment)
+      res.status(201).json({ comment: comment.toObject() })
+    })
+    // if an error occurs, pass it off to our error handler
+    // the error handler needs the error message and the `res` object so that it
+    // can send an error message back to the client
+    .catch(next)
 })
 
 // DESTROY
 // DELETE /favorites/<id>
-router.delete('/comment/:id', requireToken, (req, res, next) => {
-	Comment.findById(req.params.id)
-		.then(handle404)
-		.then((comment) => {
-			// throw an error if current user doesn't own `favorite`
-			requireOwnership(req, comment)
-			// delete the example ONLY IF the above didn't throw
-			comment.deleteOne()
-		})
-		// send back 204 and no content if the deletion succeeded
-		.then(() => res.sendStatus(204))
-		// if an error occurs, pass it to the handler
-		.catch(next)
+router.delete('/comments/:id', requireToken, (req, res, next) => {
+  Comment.findById(req.params.id)
+    .then(handle404)
+    .then((comment) => {
+      // throw an error if current user doesn't own `favorite`
+      requireOwnership(req, comment)
+      // delete the example ONLY IF the above didn't throw
+      comment.deleteOne()
+    })
+    // send back 204 and no content if the deletion succeeded
+    .then(() => res.sendStatus(204))
+    // if an error occurs, pass it to the handler
+    .catch(next)
 })
 
 // UPDATE
 // PATCH /comment/<id>
 router.patch('/comments/:id', requireToken, removeBlanks, (req, res, next) => {
-    delete req.body.owner
-    
-	Comment.findById(req.params.id)
-        .then(handle404)
+  delete req.body.owner
+  console.log('our params ', req.params.id)
 
-        .then(comment => {
-			console.log('this is updated comment ', req.body.comment)
-			requireOwnership(req, comment)
-			
-            return comment.updateOne(req.body.comment)
-        })
-        .then(() => res.sendStatus(204))
-        .catch(next)
+  Comment.findById(req.params.id)
+    .then(handle404)
+
+    .then((comment) => {
+      requireOwnership(req, comment)
+      console.log('this is updated comment ', req.body.comment)
+
+      return comment.updateOne(req.body.comment)
+    })
+    .then(() => res.sendStatus(204))
+    .catch(next)
 })
 
 // // UPDATE
@@ -97,8 +99,5 @@ router.patch('/comments/:id', requireToken, removeBlanks, (req, res, next) => {
 //     // pass to errorhandler if not successful
 //         .catch(next)
 // })
-
-
-
 
 module.exports = router
