@@ -42,22 +42,22 @@ router.post('/comment', requireToken, (req, res, next) => {
 		.catch(next)
 })
 
-// // DESTROY
-// // DELETE /favorites/<id>
-// router.delete('/favorites/:id', requireToken, (req, res, next) => {
-// 	Favorite.findById(req.params.id)
-// 		.then(handle404)
-// 		.then((favorite) => {
-// 			// throw an error if current user doesn't own `favorite`
-// 			requireOwnership(req, favorite)
-// 			// delete the example ONLY IF the above didn't throw
-// 			favorite.deleteOne()
-// 		})
-// 		// send back 204 and no content if the deletion succeeded
-// 		.then(() => res.sendStatus(204))
-// 		// if an error occurs, pass it to the handler
-// 		.catch(next)
-// })
+// DESTROY
+// DELETE /favorites/<id>
+router.delete('/comment/:id', requireToken, (req, res, next) => {
+	Comment.findById(req.params.id)
+		.then(handle404)
+		.then((comment) => {
+			// throw an error if current user doesn't own `favorite`
+			requireOwnership(req, comment)
+			// delete the example ONLY IF the above didn't throw
+			comment.deleteOne()
+		})
+		// send back 204 and no content if the deletion succeeded
+		.then(() => res.sendStatus(204))
+		// if an error occurs, pass it to the handler
+		.catch(next)
+})
 
 // // UPDATE
 // // PATCH /toys/<pet_id>/<toy_id>
