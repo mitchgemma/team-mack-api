@@ -25,7 +25,7 @@ const requireToken = passport.authenticate('bearer', { session: false })
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
 
-// SEARCH
+// SEARCH INDEX
 // GET
 router.get('/search/:type/:name', (req, res, next) => {
     const type = req.params.type
@@ -57,6 +57,29 @@ router.get('/search/:type/:name', (req, res, next) => {
       .then((response) => res.status(200).json(response.data))
       .catch(next)
     }
+      // .then(response => console.log(JSON.stringify(response.data: )))
+      // .then((response) => console.log('this is the type', {taxonomies: taxonomies}))
+      // if an error occurs, pass it to the handler
+  })
+// SEARCH SHOW
+// GET
+router.get('/search/:type/:name/:id', (req, res, next) => {
+    const type = req.params.type
+    const searchItem = req.params.name
+    const id = req.params.id
+    const apiUrl = 'https://api.seatgeek.com/2/'
+    const clientCode = 'MjYzNDYyODl8MTY0ODY4NTU3OS45NjEwNTYy'
+    const secretCode =
+      '2b6bbdda96ccdb82a057700129eeefa19c774f6ff5e39ab28e15eb61db0013e4'
+  
+      axios
+      .get(
+        `${apiUrl}${type}?client_id=${clientCode}&client_SECRET=${secretCode}&id=${id}`
+      )
+
+      .then((response) => res.status(200).json(response.data))
+      .catch(next)
+    
       // .then(response => console.log(JSON.stringify(response.data: )))
       // .then((response) => console.log('this is the type', {taxonomies: taxonomies}))
       // if an error occurs, pass it to the handler
