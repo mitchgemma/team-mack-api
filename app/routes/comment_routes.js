@@ -71,7 +71,7 @@ router.patch('/comments/:id', requireToken, removeBlanks, (req, res, next) => {
 			console.log('this is updated comment ', req.body.comment)
 			requireOwnership(req, comment)
 			
-            return Comment.updateOne(req.body.comment)
+            return comment.updateOne(req.body.comment)
         })
         .then(() => res.sendStatus(204))
         .catch(next)
