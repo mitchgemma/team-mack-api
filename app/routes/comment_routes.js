@@ -59,25 +59,46 @@ router.delete('/comment/:id', requireToken, (req, res, next) => {
 		.catch(next)
 })
 
-// // UPDATE
-// // PATCH /toys/<pet_id>/<toy_id>
-// router.patch('/toys/:petId/:toyId', requireToken, removeBlanks, (req, res, next) => {
-//     const toyId = req.params.toyId
-//     const petId = req.params.petId
+// UPDATE
+// PATCH /comment/<id>
+router.patch('/comments/:id', requireToken, removeBlanks, (req, res, next) => {
+    delete req.body.owner
+    
+	Comment.findById(req.params.id)
+        .then(handle404)
 
-//     Pet.findById(petId)
+        .then(comment => {
+			console.log('this is updated comment ', req.body.comment)
+			requireOwnership(req, comment)
+			
+            return Comment.updateOne(req.body.comment)
+        })
+        .then(() => res.sendStatus(204))
+        .catch(next)
+})
+
+// // UPDATE
+// // PATCH /pets/624470c12ed7079ead53d4df
+// router.patch('/pets/:id', requireToken, removeBlanks, (req, res, next) => {
+//     // if the client attempts to change the owner of the pet, we can disallow that from the getgo
+//     delete req.body.owner
+//     // then we find the pet by the id
+//     Pet.findById(req.params.id)
+//     // handle our 404
 //         .then(handle404)
+//     // requireOwnership and update the pet
 //         .then(pet => {
-//             const theToy = pet.toys.id(toyId)
-//             console.log('this is the original toy', theToy)
 //             requireOwnership(req, pet)
 
-//             theToy.set(req.body.toy)
-
-//             return pet.save()
+//             return pet.updateOne(req.body.pet)
 //         })
+//     // send a 204 no content if successful
 //         .then(() => res.sendStatus(204))
+//     // pass to errorhandler if not successful
 //         .catch(next)
 // })
+
+
+
 
 module.exports = router
