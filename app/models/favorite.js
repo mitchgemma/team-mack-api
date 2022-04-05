@@ -20,6 +20,7 @@ const favoriteSchema = new mongoose.Schema(
       ref: 'User',
     },
   },
+  
   {
     timestamps: true,
   }
