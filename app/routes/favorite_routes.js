@@ -17,6 +17,7 @@ const requireOwnership = customErrors.requireOwnership
 // this is middleware that will remove blank fields from `req.body`, e.g.
 // { favorite: { name: '', type: 'foo' } } -> { example: { text: 'foo' } }
 const removeBlanks = require('../../lib/remove_blank_fields')
+const { response } = require('express')
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
 // it will also set `req.user`
@@ -27,8 +28,11 @@ const router = express.Router()
 
 // INDEX
 // GET /favorites
-router.get('/favorites', requireToken, (req, res, next) => {
+router.get('/favorites', (req, res, next) => {
+  // favorite.owner = user.id
+
   Favorite.find()
+    .populate('owner')
     .then((favorites) => {
       return favorites.map((favorite) => favorite.toObject())
     })
@@ -57,7 +61,12 @@ router.get('/favorites/:id', requireToken, (req, res, next) => {
         .get(
           `${apiUrl}${type}?client_id=${clientCode}&client_SECRET=${secretCode}&id=${seatGeekId}`
         )
-        .then((response) => res.status(200).json(response.data))
+        .then((response) => {
+          res.status(200).json({ seatGeekData: response.data })
+          const seatGeekData = response.data
+          console.log('this is the seat geek data', seatGeekData)
+        })
+          
         .catch(next)
     })
 })
