@@ -28,13 +28,17 @@ const router = express.Router()
 
 // INDEX
 // GET /favorites
-router.get('/favorites', (req, res, next) => {
+router.get('/favorites',  requireToken, (req, res, next) => {
   // favorite.owner = user.id
 
   Favorite.find()
     .populate('owner')
     .then((favorites) => {
-      return favorites.map((favorite) => favorite.toObject())
+      let userFavs = favorites.filter(fav => fav.owner._id == req.user.id)
+      console.log('the favorites:', userFavs)
+      
+      // requireOwnership(req, favorites)
+      return userFavs.map((favorite) => favorite.toObject())
     })
     .then((favorites) => res.status(200).json({ favorites: favorites }))
     // if an error occurs, pass it to the handler
@@ -43,7 +47,7 @@ router.get('/favorites', (req, res, next) => {
 
 // SHOW
 // GET /favorites/<seatGeekId>
-router.get('/favorites/:id', requireToken, (req, res, next) => {
+router.get('/favorites/:id', (req, res, next) => {
   Favorite.findById(req.params.id)
     .then(handle404)
 
@@ -61,12 +65,7 @@ router.get('/favorites/:id', requireToken, (req, res, next) => {
         .get(
           `${apiUrl}${type}?client_id=${clientCode}&client_SECRET=${secretCode}&id=${seatGeekId}`
         )
-        .then((response) => {
-          res.status(200).json({ seatGeekData: response.data })
-          const seatGeekData = response.data
-          console.log('this is the seat geek data', seatGeekData)
-        })
-          
+        .then((response) => res.status(200).json({ favorite: response.data }))
         .catch(next)
     })
 })
@@ -75,7 +74,7 @@ router.get('/favorites/:id', requireToken, (req, res, next) => {
 // POST /favorites
 router.post('/favorites', requireToken, (req, res, next) => {
   // set owner of new example to be current user
-  req.body.favorite.owner = req.user.id
+  req.body.favorite.owner = req.user._id
 
   Favorite.create(req.body.favorite)
     // respond to succesful `create` with status 201 and JSON of new "example"
