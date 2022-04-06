@@ -30,7 +30,6 @@ const router = express.Router()
 // GET /favorites
 router.get('/favorites',  requireToken, (req, res, next) => {
   // favorite.owner = user.id
-
   Favorite.find()
     .populate('owner')
     .then((favorites) => {
@@ -50,7 +49,7 @@ router.get('/favorites',  requireToken, (req, res, next) => {
 router.get('/favorites/:id', (req, res, next) => {
   Favorite.findById(req.params.id)
     .then(handle404)
-
+    
     .then((favorite) => {
       // make an API call using our saved type and seatGeekId from the database
       // console.log('this is seatgeek', favorite.seatGeekId )
@@ -65,6 +64,7 @@ router.get('/favorites/:id', (req, res, next) => {
         .get(
           `${apiUrl}${type}?client_id=${clientCode}&client_SECRET=${secretCode}&id=${seatGeekId}`
         )
+        
         .then((response) => res.status(200).json({ favorite: response.data }))
         .catch(next)
     })
