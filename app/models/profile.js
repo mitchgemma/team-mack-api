@@ -28,6 +28,7 @@ const profileSchema = new mongoose.Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+      unique: true,
     },
   },
   {
@@ -35,4 +36,4 @@ const profileSchema = new mongoose.Schema(
   }
 )
 
-module.exports = profileSchema
+module.exports = mongoose.model('Profile', profileSchema)

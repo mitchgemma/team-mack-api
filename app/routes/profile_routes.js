@@ -8,6 +8,7 @@ const handle404 = customErrors.handle404
 const requireOwnership = customErrors.requireOwnership
 const requireToken = passport.authenticate('bearer', { session: false })
 const removeBlanks = require('../../lib/remove_blank_fields')
+const Profile = require('../models/profile')
 
 const router = express.Router()
 
@@ -20,19 +21,15 @@ router.post('/user/:userId', removeBlanks, (req, res, next) => {
   //   console.log('the user', userId)
   //   console.log('the profile', profile)
   // find the user
-  User.findById(userId)
+  console.log('this is the req.body', req.body.profile)
+  Profile.create(req.body.profile)
     // handle what happens if no user is found
     .then(handle404)
     .then((user) => {
-      //   console.log('this is the req.body', req.body)
-      user.profile = profile
-      console.log('this is the user.profile', user.profile)
-      // save the user
-      console.log('this is the user', user)
+      res.status(201).json({ profile: user.toObject() })
+      console.log('this is the new user', user)
       return user.save()
     })
-    // then we send the pet as json
-    .then((user) => res.status(201).json({ profile: user.toObject() }))
     // catch errors and send to the handler
     .catch(next)
 })
@@ -40,14 +37,15 @@ router.post('/user/:userId', removeBlanks, (req, res, next) => {
 // UPDATE
 //PATCH /user/<user_id>/<profile_id>
 router.patch(
-  '/user/:userId/:profileId',
+  '/user/:profileId',
   requireToken,
   removeBlanks,
   (req, res, next) => {
     const userId = req.params.userId
     const profileId = req.params.profileId + ''
 
-    User.findById(userId)
+    Profile.findById(profileId)
+      .populate('owner')
       .then(handle404)
       .then((user) => {
         // keeping all of these to troubleshoot with Timm
