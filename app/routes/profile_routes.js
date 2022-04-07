@@ -15,7 +15,7 @@ const router = express.Router()
 // ROUTES
 // POST -> create a profile
 // path might need to be changed
-router.post('/user/:userId', removeBlanks, (req, res, next) => {
+router.post('/user', removeBlanks, (req, res, next) => {
   const userId = req.params.userId
   const profile = req.body.profile
   //   console.log('the user', userId)
@@ -25,10 +25,10 @@ router.post('/user/:userId', removeBlanks, (req, res, next) => {
   Profile.create(req.body.profile)
     // handle what happens if no user is found
     .then(handle404)
-    .then((user) => {
-      res.status(201).json({ profile: user.toObject() })
-      console.log('this is the new user', user)
-      return user.save()
+    .then((profile) => {
+      res.status(201).json({ profile: profile.toObject() })
+      console.log('this is the new profile', profile)
+      return profile.save()
     })
     // catch errors and send to the handler
     .catch(next)
