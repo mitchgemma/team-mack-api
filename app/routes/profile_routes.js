@@ -16,8 +16,6 @@ const router = express.Router()
 // POST -> create a profile
 // path might need to be changed
 router.post('/user', removeBlanks, (req, res, next) => {
-  const userId = req.params.userId
-  const profile = req.body.profile
   //   console.log('the user', userId)
   //   console.log('the profile', profile)
   // find the user
@@ -31,6 +29,21 @@ router.post('/user', removeBlanks, (req, res, next) => {
       return profile.save()
     })
     // catch errors and send to the handler
+    .catch(next)
+})
+
+// SHOW
+// GET /user/<profileId>
+router.get('/user/:profileId', requireToken, removeBlanks, (req, res, next) => {
+  const profileId = req.params.profileId
+
+  Profile.findById(profileId)
+    .populate('owner')
+    .then(handle404)
+    .then((profile) => {
+      res.status(200).json(profile.toObject()),
+        console.log('the response for profile', profile)
+    })
     .catch(next)
 })
 
