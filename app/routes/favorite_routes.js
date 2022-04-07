@@ -33,7 +33,7 @@ router.get('/favorites',  requireToken, (req, res, next) => {
   Favorite.find()
     .populate('owner')
     .then((favorites) => {
-      let userFavs = favorites.filter(fav => fav.owner._id == req.user.id)
+      let userFavs = favorites.filter(fav => fav.owner.id == req.user.id)
       console.log('the favorites:', userFavs)
       
       // requireOwnership(req, favorites)
