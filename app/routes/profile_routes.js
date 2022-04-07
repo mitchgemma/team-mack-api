@@ -41,28 +41,19 @@ router.patch(
   requireToken,
   removeBlanks,
   (req, res, next) => {
-    const userId = req.params.userId
-    const profileId = req.params.profileId + ''
+    const profileId = req.params.profileId
 
     Profile.findById(profileId)
       .populate('owner')
       .then(handle404)
-      .then((user) => {
-        // keeping all of these to troubleshoot with Timm
-        // also route seems to be working without the profileId param
-        console.log('user.profile.id', user.profile.id)
-        console.log('the user.profile ya know', user.profile)
-        console.log('req.body.profile', req.body.profile)
+      .then((profile) => {
+        // requireOwnership(req, profile)
+        console.log('the profile', profile)
 
-        // const theProfile = user.profile.id(profileId)
-        // console.log('the profile', theProfile)
-        user.profile = req.body.profile
         console.log('req', req)
-        console.log('user', user)
-        // requireOwnership causing issues for route - put on back burner and ask Timm
-        // requireOwnership(req, user)
+        console.log('user', profile)
 
-        return user.save()
+        return profile.updateOne(req.body.profile)
       })
       .then(() => res.sendStatus(204))
       .catch(next)
