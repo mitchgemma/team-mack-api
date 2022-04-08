@@ -27,11 +27,11 @@ const router = express.Router()
 
 // CREATE
 // POST /comment
-router.post('/comments', requireToken, (req, res, next) => {
+router.post('/comments/:id', (req, res, next) => {
   // set owner of new example to be current user
   req.body.comment.owner = req.user.id
-
-  Comment.create(req.body.comment)
+  
+  Comment.create(req.params.id)
     // respond to succesful `create` with status 201 and JSON of new "example"
     .then((comment) => {
       //   console.log('this is created comment ', req.body.comment)
@@ -78,26 +78,5 @@ router.patch('/comments/:id', requireToken, removeBlanks, (req, res, next) => {
     .then(() => res.sendStatus(204))
     .catch(next)
 })
-
-// // UPDATE
-// // PATCH /pets/624470c12ed7079ead53d4df
-// router.patch('/pets/:id', requireToken, removeBlanks, (req, res, next) => {
-//     // if the client attempts to change the owner of the pet, we can disallow that from the getgo
-//     delete req.body.owner
-//     // then we find the pet by the id
-//     Pet.findById(req.params.id)
-//     // handle our 404
-//         .then(handle404)
-//     // requireOwnership and update the pet
-//         .then(pet => {
-//             requireOwnership(req, pet)
-
-//             return pet.updateOne(req.body.pet)
-//         })
-//     // send a 204 no content if successful
-//         .then(() => res.sendStatus(204))
-//     // pass to errorhandler if not successful
-//         .catch(next)
-// })
 
 module.exports = router

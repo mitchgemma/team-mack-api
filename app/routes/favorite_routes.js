@@ -59,7 +59,8 @@ router.get('/favorites/:id', (req, res, next) => {
       const clientCode = 'MjYzNDYyODl8MTY0ODY4NTU3OS45NjEwNTYy'
       const secretCode =
         '2b6bbdda96ccdb82a057700129eeefa19c774f6ff5e39ab28e15eb61db0013e4'
-
+      
+      
       axios
         .get(
           `${apiUrl}${type}?client_id=${clientCode}&client_SECRET=${secretCode}&id=${seatGeekId}`
