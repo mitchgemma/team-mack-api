@@ -49,23 +49,28 @@ router.get('/user/:profileId', removeBlanks, (req, res, next) => {
 
 // UPDATE
 //PATCH /user/<user_id>/<profile_id>
-router.patch('/user/:profileId', removeBlanks, (req, res, next) => {
-  const profileId = req.params.profileId
-  console.log('back end req.body', req.body)
-  Profile.findById(profileId)
-    .populate('owner')
-    .then(handle404)
-    .then((profile) => {
-      console.log('the profile', profile)
+router.patch(
+  '/user/:profileId',
+  requireToken,
+  removeBlanks,
+  (req, res, next) => {
+    const profileId = req.params.profileId
+    console.log('back end req.body', req.body)
+    Profile.findById(profileId)
+      .populate('owner')
+      .then(handle404)
+      .then((profile) => {
+        console.log('the profile', profile)
 
-      console.log('req', req)
-      console.log('user', profile)
-      // requireOwnership(req, profile)
-      // profile = req.body.profile
-      return profile.updateOne(req.body.profile)
-    })
-    .then(() => res.sendStatus(204))
-    .catch(next)
-})
+        console.log('req', req)
+        console.log('user', profile)
+        // requireOwnership(req, profile)
+        // profile = req.body.profile
+        return profile.updateOne(req.body.profile)
+      })
+      .then(() => res.sendStatus(204))
+      .catch(next)
+  }
+)
 
 module.exports = router
