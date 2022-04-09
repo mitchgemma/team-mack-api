@@ -19,4 +19,4 @@
 1. TBD
 
 ## ERD
-![img](ERD-Updated.jpg)
+![img](ERD-Updated.png)

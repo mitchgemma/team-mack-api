@@ -29,17 +29,20 @@ const router = express.Router()
 // POST /comment
 router.post('/comments/:id', (req, res, next) => {
   // set owner of new example to be current user
-  req.body.comment.owner = req.user.id
+  // req.body.comment.owner = req.user.id
+  // get our comment from req.body
+  const comment = req.body.comment
+  // get our commentId from req.params.id
+  const favoriteId = req.params.id
   
-  Comment.create(req.params.id)
-    // respond to succesful `create` with status 201 and JSON of new "example"
-    .then((comment) => {
+  Favorite.findById(favoriteId)
+    .then(handle404)
+    .then((favorite) => {
       //   console.log('this is created comment ', req.body.comment)
-      res.status(201).json({ comment: comment.toObject() })
+      favorite.comments.push(comment)
+      return favorite.save()
     })
-    // if an error occurs, pass it off to our error handler
-    // the error handler needs the error message and the `res` object so that it
-    // can send an error message back to the client
+    .then(product => res.status(201).json({ favorite: favorite }))
     .catch(next)
 })
 
