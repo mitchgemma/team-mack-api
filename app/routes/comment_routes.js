@@ -29,9 +29,9 @@ const router = express.Router()
 // POST /comment
 router.post('/comments/:id', (req, res, next) => {
   // set owner of new example to be current user
-  req.body.comment.owner = req.user.id
+  // req.body.comment.owner = req.user.id
   
-  Comment.create(req.params.id)
+  Comment.create(req.body.comment)
     // respond to succesful `create` with status 201 and JSON of new "example"
     .then((comment) => {
       //   console.log('this is created comment ', req.body.comment)

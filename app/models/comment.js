@@ -6,11 +6,6 @@ const commentSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		type: {
-			type: String,
-			enum: ['events', 'performers', 'venues'],
-			required: true,
-		  },
 		seatGeekId: {
 			type: Number,
 			required: true,
@@ -18,7 +13,6 @@ const commentSchema = new mongoose.Schema(
 		owner: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'User',
-			
 			}
 		},
 	{

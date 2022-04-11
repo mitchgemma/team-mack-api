@@ -47,6 +47,7 @@ router.get('/favorites',  requireToken, (req, res, next) => {
 // SHOW
 // GET /favorites/<seatGeekId>
 router.get('/favorites/:id', (req, res, next) => {
+  // sGId = parseInt(req.params.id) 
   Favorite.findById(req.params.id)
     .then(handle404)
     
@@ -66,7 +67,7 @@ router.get('/favorites/:id', (req, res, next) => {
           `${apiUrl}${type}?client_id=${clientCode}&client_SECRET=${secretCode}&id=${seatGeekId}`
         )
         
-        .then((response) => res.status(200).json({ favorite: response.data }))
+        .then((response) => res.status(200).json({ favorite: response.data, seatGeekId: seatGeekId }))
         .catch(next)
     })
 })
