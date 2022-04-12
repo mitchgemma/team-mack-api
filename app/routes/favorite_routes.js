@@ -77,8 +77,27 @@ router.get('/favorites/:id', (req, res, next) => {
 router.post('/favorites', requireToken, (req, res, next) => {
   // set owner of new example to be current user
   req.body.favorite.owner = req.user._id
-
-  Favorite.create(req.body.favorite)
+  console.log('back end req.body', req.body.favorite)
+  // if name exists, grab name, if not grab title
+  let favName = ''
+  if (req.body.favorite.name) {
+    favName = req.body.favorite.name
+  } else {
+    favName = req.body.favorite.title
+  }
+  let favType = ''
+  if (req.body.favorite.type == 'band') {
+    favType = 'performers'
+  }
+  //req.body.favorite.type
+  const favId = req.body.favorite.id
+  const createObject = {
+    name: favName,
+    type: favType,
+    seatGeekId: favId,
+    owner: req.user._id,
+  }
+  Favorite.create(createObject)
     // respond to succesful `create` with status 201 and JSON of new "example"
     .then((favorite) => {
       console.log('the favorite', favorite)
