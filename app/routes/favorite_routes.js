@@ -28,14 +28,14 @@ const router = express.Router()
 
 // INDEX
 // GET /favorites
-router.get('/favorites',  requireToken, (req, res, next) => {
+router.get('/favorites', requireToken, (req, res, next) => {
   // favorite.owner = user.id
   Favorite.find()
     .populate('owner')
     .then((favorites) => {
-      let userFavs = favorites.filter(fav => fav.owner.id == req.user.id)
+      let userFavs = favorites.filter((fav) => fav.owner.id == req.user.id)
       console.log('the favorites:', userFavs)
-      
+
       // requireOwnership(req, favorites)
       return userFavs.map((favorite) => favorite.toObject())
     })
@@ -47,10 +47,10 @@ router.get('/favorites',  requireToken, (req, res, next) => {
 // SHOW
 // GET /favorites/<seatGeekId>
 router.get('/favorites/:id', (req, res, next) => {
-  // sGId = parseInt(req.params.id) 
+  // sGId = parseInt(req.params.id)
   Favorite.findById(req.params.id)
     .then(handle404)
-    
+
     .then((favorite) => {
       // make an API call using our saved type and seatGeekId from the database
       // console.log('this is seatgeek', favorite.seatGeekId )
@@ -60,14 +60,17 @@ router.get('/favorites/:id', (req, res, next) => {
       const clientCode = 'MjYzNDYyODl8MTY0ODY4NTU3OS45NjEwNTYy'
       const secretCode =
         '2b6bbdda96ccdb82a057700129eeefa19c774f6ff5e39ab28e15eb61db0013e4'
-      
-      
+
       axios
         .get(
           `${apiUrl}${type}?client_id=${clientCode}&client_SECRET=${secretCode}&id=${seatGeekId}`
         )
-        
-        .then((response) => res.status(200).json({ favorite: response.data, seatGeekId: seatGeekId }))
+
+        .then((response) =>
+          res
+            .status(200)
+            .json({ favorite: response.data, seatGeekId: seatGeekId })
+        )
         .catch(next)
     })
 })
@@ -120,7 +123,7 @@ router.delete('/favorites/:id', requireToken, (req, res, next) => {
       // delete the example ONLY IF the above didn't throw
       favorite.deleteOne()
     })
-    // send back 204 and no content if the deletion succeeded
+    // send back and no content if the deletion succeeded
     .then(() => res.sendStatus(204))
     // if an error occurs, pass it to the handler
     .catch(next)

@@ -15,10 +15,11 @@ const router = express.Router()
 // ROUTES
 // POST -> create a profile
 // path might need to be changed
-router.post('/user', removeBlanks, (req, res, next) => {
+router.post('/user', requireToken, removeBlanks, (req, res, next) => {
   //   console.log('the user', userId)
   //   console.log('the profile', profile)
   // find the user
+  req.body.profile.owner = req.user.id
   console.log('this is the req.body', req.body.profile)
   Profile.create(req.body.profile)
     // handle what happens if no user is found
