@@ -25,10 +25,11 @@ const requireToken = passport.authenticate('bearer', { session: false })
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
 
+
 // CREATE
 // POST /comment
 router.post('/comments/:id', (req, res, next) => {
-  // set owner of new example to be current user
+  
   // req.body.comment.owner = req.user.id
   
   Comment.create(req.body.comment)
@@ -37,9 +38,6 @@ router.post('/comments/:id', (req, res, next) => {
       //   console.log('this is created comment ', req.body.comment)
       res.status(201).json({ comment: comment.toObject() })
     })
-    // if an error occurs, pass it off to our error handler
-    // the error handler needs the error message and the `res` object so that it
-    // can send an error message back to the client
     .catch(next)
 })
 
