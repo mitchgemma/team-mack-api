@@ -35,10 +35,11 @@ router.post('/user', requireToken, removeBlanks, (req, res, next) => {
 
 // SHOW
 // GET /user/<profileId>
-router.get('/user/:profileId', removeBlanks, (req, res, next) => {
-  const profileId = req.params.profileId
+router.get('/profile', requireToken, removeBlanks, (req, res, next) => {
+  console.log('the request', req.user.id)
 
-  Profile.findById(profileId)
+  console.log('the request', req)
+  Profile.findOne({ owner: req.user.id })
     .populate('owner')
     .then(handle404)
     .then((profile) => {

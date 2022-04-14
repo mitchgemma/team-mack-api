@@ -123,7 +123,7 @@ router.delete('/favorites/:id', requireToken, (req, res, next) => {
       // delete the example ONLY IF the above didn't throw
       favorite.deleteOne()
     })
-    // send back and no content if the deletion succeeded
+    // send back 204 and no content if the deletion succeeded
     .then(() => res.sendStatus(204))
     // if an error occurs, pass it to the handler
     .catch(next)
