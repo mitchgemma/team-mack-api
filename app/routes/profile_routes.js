@@ -15,10 +15,11 @@ const router = express.Router()
 // ROUTES
 // POST -> create a profile
 // path might need to be changed
-router.post('/user', removeBlanks, (req, res, next) => {
+router.post('/profile', requireToken, removeBlanks, (req, res, next) => {
   //   console.log('the user', userId)
   //   console.log('the profile', profile)
   // find the user
+  req.body.profile.owner = req.user.id
   console.log('this is the req.body', req.body.profile)
   Profile.create(req.body.profile)
     // handle what happens if no user is found
@@ -34,10 +35,11 @@ router.post('/user', removeBlanks, (req, res, next) => {
 
 // SHOW
 // GET /user/<profileId>
-router.get('/user/:profileId', removeBlanks, (req, res, next) => {
-  const profileId = req.params.profileId
+router.get('/profile', requireToken, removeBlanks, (req, res, next) => {
+  console.log('the request', req.user.id)
 
-  Profile.findById(profileId)
+  console.log('the request', req)
+  Profile.findOne({ owner: req.user.id })
     .populate('owner')
     .then(handle404)
     .then((profile) => {
