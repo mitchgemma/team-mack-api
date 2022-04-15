@@ -25,13 +25,30 @@ const requireToken = passport.authenticate('bearer', { session: false })
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
 
+//GET
+router.get('/comments/:id', (req, res, next) => {
+  Comment.find({seatGeekId: req.params.id})
+    .populate('owner')
+    .then((comments) => res.status(200).json({ comments: comments }))
+    // if an error occurs, pass it to the handler
+    .catch(next)
+})
+
+// SHOW
+// GET /comments/<id>
+router.get('/comments/:id', (req, res, next) => {
+  // we get the id from req.params.id -> :id
+  Comment.findById(req.params.id)
+      .populate('owner')
+      .then(handle404)
+      .then(comment => res.status(200).json({ comment: comment.toObject() }))
+      .catch(next)
+})
 
 // CREATE
 // POST /comment
-router.post('/comments/:id', (req, res, next) => {
-  
+router.post('/comments/:id', (req, res, next) => { 
   // req.body.comment.owner = req.user.id
-  
   Comment.create(req.body.comment)
     // respond to succesful `create` with status 201 and JSON of new "example"
     .then((comment) => {
@@ -43,12 +60,12 @@ router.post('/comments/:id', (req, res, next) => {
 
 // DESTROY
 // DELETE /favorites/<id>
-router.delete('/comments/:id', requireToken, (req, res, next) => {
+router.delete('/comments/:id', (req, res, next) => {
   Comment.findById(req.params.id)
     .then(handle404)
     .then((comment) => {
       // throw an error if current user doesn't own `favorite`
-      requireOwnership(req, comment)
+      // requireOwnership(req, comment)
       // delete the example ONLY IF the above didn't throw
       comment.deleteOne()
     })
